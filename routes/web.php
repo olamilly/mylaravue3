@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/api/users', [App\Http\Controllers\userController::class, "index"]);
+//Route::group(['middleware' => ['auth']], function() {}
 
-Route::get('/admin/dashboard', [App\Http\Controllers\adminController::class, 'index']);
+Route::view('/{any}', 'admin.layouts.app')
+    ->where('any', '.*');
