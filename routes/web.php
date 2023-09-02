@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/api/users', [App\Http\Controllers\userController::class, "index"]);
-//Route::group(['middleware' => ['auth']], function() {}
+
+Route::post('/api/users', [App\Http\Controllers\userController::class, "create"]);
+Route::get('/api/users', [App\Http\Controllers\userController::class, "read"]);
+Route::patch('/api/users', [App\Http\Controllers\userController::class, "update"]);
+Route::delete('/api/users/{id}', [App\Http\Controllers\userController::class, "delete"]);
 
 Route::view('/{any}', 'admin.layouts.app')
     ->where('any', '.*');

@@ -1,9 +1,34 @@
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import axios from 'axios'
 
 
 export default function usePeople() {
     const users = ref([])
+
+    const delid = ref()
+
+    const registerForm = reactive({
+        name: '',
+        email: '',
+        password: '',
+        passwordConfirm: ''
+    })
+
+    const updateForm = reactive({
+        id:"",
+        name: '',
+        email: '',
+    })
+
+    const newUser = () => {
+        axios.post('/api/users', registerForm)
+        .then((response)=>{
+            registerForm.name=""
+            registerForm.email=""
+            registerForm.password=""
+            registerForm.passwordConfirm=""
+        })
+    }
 
     const getUsers = async () => {
         let response = await axios.get('/api/users')
@@ -15,9 +40,27 @@ export default function usePeople() {
         });      
     }
 
+    const updateUser = () => {
+        axios.patch('/api/users', updateForm)
+        .then((response)=>{
+            updateForm.id=""
+            updateForm.name=""
+            updateForm.email=""
+        })
+    }
+
+    const deleteUser = (a) => {
+        var url="/api/users/"+a;
+        axios.delete(url)
+    }
   
     return {
         users,
-        getUsers
+        getUsers,
+        newUser,
+        registerForm,
+        updateForm,
+        updateUser,
+        deleteUser
     }
 }
