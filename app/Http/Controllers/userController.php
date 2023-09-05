@@ -33,8 +33,6 @@ class userController extends Controller
     }
     public function delete(string $id){
         $model = User::where("id",$id)->first();
-        $message=str_replace("name", $model->name, "User name has been deleted successfully");
         $model->delete();
-        return response->json(["message"=>$message]);
     }
 }

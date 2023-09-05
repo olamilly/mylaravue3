@@ -6,11 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AdminLTE 3 | Starter</title>
 
-
-
-
-
 @vite(['resources/css/app.css', 'resources/js/app.js'])
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">
 
