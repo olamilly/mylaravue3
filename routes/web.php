@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/api/users', [App\Http\Controllers\userController::class, "create"]);
 Route::get('/api/users', [App\Http\Controllers\userController::class, "read"]);
+Route::get('/api/users/search', [App\Http\Controllers\userController::class, "search"]);
 Route::patch('/api/users', [App\Http\Controllers\userController::class, "update"]);
+Route::put('/api/users', [App\Http\Controllers\userController::class, "editrole"]);
 Route::delete('/api/users/{id}', [App\Http\Controllers\userController::class, "delete"]);
 
 Route::view('/{any}', 'admin.layouts.app')
