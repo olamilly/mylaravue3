@@ -23,14 +23,14 @@ class userController extends Controller
     }
 
     public function read(){
-        $userlist = User::all();
-        return response()->json(["users"=>$userlist]);
+        $userlist = User::paginate(5);
+        return $userlist;
     }
 
     public function update(Request $r){
         $validator = $r->validate([ 
             'name' => 'required', 
-            'email' => 'required|email|unique:users', 
+            'email' => 'required|unique:users,email,'.$r->id,
             'password' => 'sometimes|min:8', 
         ]);
         $model = User::where("id",$r->id)->first();
@@ -47,6 +47,10 @@ class userController extends Controller
     public function delete(string $id){
         $model = User::where("id",$id)->first();
         $model->delete();
+    }
+
+    public function bulkDelete(Request $r){
+        User::whereIn('id',$r->ids)->delete();
     }
 
     public function editrole(Request $r){

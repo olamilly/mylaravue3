@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AdminLTE 3 | Starter</title>
+<title>AdminDashboard</title>
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
@@ -56,17 +56,7 @@
 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 <a href="#" class="dropdown-item">
 
-<div class="media">
-<img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-<div class="media-body">
-<h3 class="dropdown-item-title">
-Brad Diesel
-<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-</h3>
-<p class="text-sm">Call me whenever you can...</p>
-<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-</div>
-</div>
+
 
 </a>
 <div class="dropdown-divider"></div>
@@ -150,7 +140,7 @@ Nora Silvester
 
 <a href="index3.html" class="brand-link">
 <img src=https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-<span class="brand-text font-weight-light">AdminLTE 3</span>
+<span class="brand-text font-weight-light">Admin Dashboard</span>
 </a>
 
 <div class="sidebar">
@@ -160,7 +150,7 @@ Nora Silvester
 <img src="https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
 </div>
 <div class="info">
-<a href="#" class="d-block">Alexander Pierce</a>
+<a href="#" class="d-block">Mustapha Olamide</a>
 </div>
 </div>
 

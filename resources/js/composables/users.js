@@ -1,13 +1,14 @@
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import { useToast } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 const toast = useToast();
 
 export default function usePeople() {
-    const users = ref([])
+    const users = ref({"data":[]})
     const userDetails = ref()
     const searchQuery=ref(null)
+    const selectedUsers=ref([])
 
     const newUser = (a, { resetForm }) => {
         axios.post('/api/users', a)
@@ -45,16 +46,18 @@ export default function usePeople() {
         }
     }
 
-    const getUsers = async () => {
-        let response = await axios.get('/api/users')
-        users.value = response.data.users
-        setDate()
-           
+    const getUsers = (page=1) => {
+        axios.get(`/api/users?page=${page}`)
+        .then((response)=>{
+            users.value = response.data
+            setDate()
+        })      
     }
 
     const setDate=()=>{
         const options2 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        users.value.forEach(i => {
+        
+        users.value.data.forEach(i => {
             i.created_at=new Date(i.created_at.slice(0,10)).toLocaleDateString('en-US', options2);
         });   
     }
@@ -77,6 +80,28 @@ export default function usePeople() {
         .then((response)=>{
             toast.success('User Deleted Successfully');
         })
+    }
+
+    const bulkDelete = ()=>{
+        axios.delete("/api/users", {
+            data:{
+                ids: selectedUsers.value
+            }
+        })
+        .then((response)=>{
+            if (selectedUsers.value.length ==1){
+                toast.success('User Deleted Successfully');
+            }
+            else{
+                toast.success('Users Deleted Successfully');
+            }
+            
+            selectedUsers.value=[]
+        })
+        .catch((error) =>{
+            handleError(error)
+        });
+        getUsers();
     }
 
     const newRole =(u,e)=>{
@@ -110,6 +135,8 @@ export default function usePeople() {
         deleteUser,
         newRole,
         searchQuery,
-        search
+        search,
+        selectedUsers,
+        bulkDelete
     }
 }

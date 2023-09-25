@@ -4,8 +4,9 @@
     import {Form, Field} from 'vee-validate';
     import * as yup from 'yup';
     import { debounce } from 'lodash';
+    import { Bootstrap4Pagination } from 'laravel-vue-pagination';
 
-    const { users, getUsers, userDetails, updateUser, deleteUser, newUser, newRole, searchQuery, search} = usePeople()
+    const { users, getUsers, userDetails, updateUser, deleteUser, newUser, newRole, searchQuery, search, selectedUsers, bulkDelete} = usePeople()
 
     const createUser = (values, { resetForm })=>{
         newUser(values, { resetForm });
@@ -70,6 +71,40 @@
         updateUser(values, { resetForm });
         getUsers();
     }
+
+    const toggleSelect=(a,b)=>{
+        if (a.target.id == "deleteAll"){
+            if(a.target.checked){
+                selectedUsers.value.length=0
+                document.querySelectorAll(".td>input").forEach(i=>{
+                    i.checked=true
+                })
+                users.value.data.forEach(i=>{
+                    selectedUsers.value.push(i.id)
+                })
+            }
+            else{
+                document.querySelectorAll(".td>input").forEach(i=>{
+                    i.checked=false
+                })
+                selectedUsers.value=[]
+            }
+        }
+        else{
+            if(a.target.checked){
+                selectedUsers.value.push(b.id)
+                if (selectedUsers.value.length == 5){
+                    document.getElementById("deleteAll").checked=true
+                }
+            }
+            else{
+                var i=selectedUsers.value.indexOf(b.id)
+                selectedUsers.value.splice(i,1)
+                document.getElementById("deleteAll").checked=false
+                console.log(selectedUsers.value)
+            }
+        }
+    }
     onMounted(getUsers)
 </script>
 <template>
@@ -81,7 +116,9 @@
     </div>
     <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
-    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item">
+        <router-link to="/admin/dashboard">Home</router-link>
+    </li>
     <li class="breadcrumb-item active">Users</li>
     </ol>
     </div>
@@ -94,10 +131,21 @@
         <div class="card">
             <div class="card-header text-center"><h1>All Users</h1></div>
             <div class="py-1" style="display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#newUserModal">Add new User</button>
+                <div style="display: flex;" >
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#newUserModal">
+                        <i class="fa fa-plus-circle mr-1"></i>
+                        Add new User
+                    </button>
+                    <div style="display: flex; align-items: center;"  v-if="selectedUsers.length>0">
+                        <button class="btn btn-danger mx-1" ><i class="fa fa-trash" @click="bulkDelete" ></i></button>
+                        <span>
+                            <span>{{ selectedUsers.length }}</span> User<span v-if="selectedUsers.length>1">s</span> Selected</span>
+                    </div>
+                    
+                </div>
+                
                 <div style="display: flex;">
                     <input type="text" v-model="searchQuery" placeholder="Search Users" class="form-control mx-1" style="width: 27%; min-width: 264px;"/>
-                   
                 </div>
             </div>
             <div class="card-body">
@@ -106,6 +154,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th class="text-center"></th>
+                    <th class="text-center"><input v-if="users.data.length > 0" id="deleteAll" @change="toggleSelect($event)" type="checkbox"/></th>
                     <th class="text-center">Name</th>
                     <th class="text-center">Email</th>
                     <th class="text-center">Registration Date</th>
@@ -113,9 +162,10 @@
                     <th class="text-center">Options</th>
                 </tr>
             </thead>
-            <tbody v-if="users.length > 0">
-                    <tr v-for="(user, index) in users" :key="user.id">
+            <tbody v-if="users.data.length > 0">
+                    <tr v-for="(user, index) in users.data" :key="user.id">
                         <td class="td">{{index + 1}}</td>
+                        <td class="td"><input type="checkbox" @change="toggleSelect($event,user)" /></td>
                         <td class=td>{{user.name}}</td>
                         <td class=td>{{user.email}}</td>
                         <td class=td>{{user.created_at}}</td>
@@ -133,7 +183,7 @@
                     </tr>
             </tbody>
             <tbody v-else>
-                <td colspan="6"><h2 style="text-align: center;width: 100%;">No Users Found...</h2></td>
+                <td colspan="7"><h2 style="text-align: center;width: 100%;">No Users Found...</h2></td>
             </tbody>
         </table></div></div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -246,6 +296,10 @@
     </div>
   </div>
 </div>
+<div style="width:100%; display:flex; justify-content: center;"><Bootstrap4Pagination
+        :data="users"
+        @pagination-change-page="getUsers"
+    /></div>
 </div>
 </template>
 <style>
